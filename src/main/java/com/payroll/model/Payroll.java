@@ -3,23 +3,17 @@ package com.payroll.model;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
-
+import java.time.Instant;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "payroll")
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+
 public class Payroll {
 
 	@Id
@@ -31,7 +25,7 @@ public class Payroll {
 	private Long employeeId;
 
 	@Column(name = "pay_date", nullable = false)
-	private LocalDate payDate;
+	private Instant payDate = Instant.now();
 
 	@Column(name = "basic_pay", nullable = false)
 	private Double basicPay;
@@ -53,6 +47,61 @@ public class Payroll {
 
 	@Column(name = "lop", nullable = false)
 	private int lop;
+
+	public void setEmployeeId(Long employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	public int getLop() {
+		return lop;
+	}
+
+	public void setLop(int lop) {
+		this.lop = lop;
+	}
+
+	public Double getBasicPay() {
+		return basicPay;
+	}
+
+	public Double getHouseRentAllowance() {
+		return houseRentAllowance;
+	}
+
+	public Double getSpecialAllowance() {
+		return specialAllowance;
+	}
+
+	public Double getEpf() {
+		return epf;
+	}
+
+	public Double getIncomeTax() {
+		return incomeTax;
+	}
+
+	public Double getProfessionalTax() {
+		return professionalTax;
+	}
+
+	public Payroll(Long payId, Long employeeId, Instant payDate, Double basicPay, Double houseRentAllowance,
+			Double specialAllowance, Double epf, Double incomeTax, Double professionalTax, int lop) {
+		super();
+		this.payId = payId;
+		this.employeeId = employeeId;
+		this.payDate = payDate;
+		this.basicPay = basicPay;
+		this.houseRentAllowance = houseRentAllowance;
+		this.specialAllowance = specialAllowance;
+		this.epf = epf;
+		this.incomeTax = incomeTax;
+		this.professionalTax = professionalTax;
+		this.lop = lop;
+	}
+
+	public Payroll() {
+		super();
+	}
 
 	// Utility method to round to two decimal places
 	private Double round(Double value) {

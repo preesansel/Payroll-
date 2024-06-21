@@ -1,15 +1,10 @@
 package com.payroll.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "salary")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class Salary {
 
 	@Id
@@ -36,4 +31,5 @@ public class Salary {
 
 	@Column(name = "pay_band", nullable = true)
 	private String payBand;
+
 }

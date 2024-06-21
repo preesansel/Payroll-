@@ -10,6 +10,7 @@ import com.payroll.exceptions.TaxServiceException;
 import com.payroll.model.Payroll;
 import com.payroll.repository.EmployeeRepository;
 import com.payroll.repository.PayrollRepository;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
@@ -20,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -39,13 +41,18 @@ public class PayrollService {
 		this.payrollRepository = payrollRepository;
 		this.restTemplate = restTemplateBuilder.build();
 	}
-	 @Scheduled(cron = "0 0 0 L * ?")
-//	@Scheduled(fixedDelay = 5000)
+
+	protected static void setRandom(Random random) {
+		PayrollService.random = random;
+	}
+
+	@Scheduled(cron = "0 0 0 L * ?")
+
 	public List<Payroll> calculatePayrolls() {
 		List<EmployeeSalaryDTO> employeeSalaries = employeeRepository.findEmployeeSalaryDetails();
 
 		String taxServiceUrl = "http://localhost:8883/tax";
-	    Map<Long, TaxDTO> taxResponse;
+		Map<Long, TaxDTO> taxResponse;
 
 		try {
 			taxResponse = restTemplate
@@ -61,11 +68,10 @@ public class PayrollService {
 			if (taxes == null) {
 				log.error("Taxes not found for {}", employeeSalary.getEmployeeId());
 				return null;
-			} 
+			}
 
 			Payroll payroll = new Payroll();
 			payroll.setEmployeeId(employeeSalary.getEmployeeId());
-			payroll.setPayDate(LocalDate.now());
 
 			double basicPay = employeeSalary.getBasicPay() / 12;
 			double houseRentAllowance = employeeSalary.getHouseRentAllowance() / 12;
@@ -111,7 +117,7 @@ public class PayrollService {
 	public PayrollDetailsDTO getPayrollDetails(Long employeeId, int year, int month) {
 		LocalDate startDate;
 		LocalDate endDate;
-
+		
 		if (month >= 4) {
 			startDate = LocalDate.of(year, 4, 1);
 			endDate = LocalDate.of(year, month, LocalDate.of(year, month, 1).lengthOfMonth());
@@ -119,8 +125,9 @@ public class PayrollService {
 			startDate = LocalDate.of(year - 1, 4, 1);
 			endDate = LocalDate.of(year, month, LocalDate.of(year, month, 1).lengthOfMonth());
 		}
-
-		List<Object[]> ytdResults = payrollRepository.findYearToDateValues(employeeId, startDate, endDate);
+		
+		
+		List<Object[]> ytdResults = payrollRepository.findYearToDateValues(employeeId, startDate.atStartOfDay(ZoneId.systemDefault()).toInstant(), endDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		if (ytdResults.isEmpty()) {
 			throw new PayrollNotFoundException("No payroll found for the specified employee, month, and year");
 		}

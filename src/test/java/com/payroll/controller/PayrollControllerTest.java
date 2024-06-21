@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class PayrollControllerTest {
+ class PayrollControllerTest {
 
     @Mock
     private PayrollService payrollService;
@@ -28,7 +28,7 @@ public class PayrollControllerTest {
     private PayrollController payrollController;
 
     @Test
-    public void testCalculatePayrolls() {
+    void testCalculatePayrolls() {
         // Given
         Payroll payroll1 = new Payroll();
         Payroll payroll2 = new Payroll();
@@ -44,7 +44,7 @@ public class PayrollControllerTest {
     }
 
     @Test
-    public void testGetPayrollDetails() {
+     void testGetPayrollDetails() {
         // Given
         Long employeeId = 1L;
         int year = 2023;
@@ -65,12 +65,12 @@ public class PayrollControllerTest {
     }
 
     @Test
-    public void testGetEmployeeDetails() {
+     void testGetEmployeeDetails() {
         // Given
         Long employeeId = 1L;
         EmployeeDetailsDTO employeeDetailsDTO = new EmployeeDetailsDTO(
-            employeeId, "John Doe", "Software Engineer", new Date(), "ABCDE1234F", 
-            "Engineering", "New York", "123456789012", "PF1234567", "Bank of America", 
+            employeeId, "Anu", "Software Engineer", new Date(), "ABCDE1234F", 
+            "Engineering", "Chennai", "123456789012", "PF1234567", "Bank of Baroda", 
             "1234567890"
         );
 

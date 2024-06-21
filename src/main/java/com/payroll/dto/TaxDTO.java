@@ -1,14 +1,21 @@
 package com.payroll.dto;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class TaxDTO {
     private Double incomeTax;
     private Double professionalTax;
+	public Double getIncomeTax() {
+		return incomeTax;
+	}
+
+	public Double getProfessionalTax() {
+		return professionalTax;
+	}
+
+	public TaxDTO(Double incomeTax, Double professionalTax) {
+		super();
+		this.incomeTax = incomeTax;
+		this.professionalTax = professionalTax;
+	}
+
+    
 }

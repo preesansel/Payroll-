@@ -1,8 +1,5 @@
 package com.payroll.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,9 +11,7 @@ import java.sql.Date;
 
 @Entity
 @Table(name = "employees")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class Employee {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,4 +46,10 @@ public class Employee {
 
 	@Column(name = "account_name", nullable = true)
 	private String bankAccountNumber;
+
+	public Employee() {
+		super();
+
+	}
+
 }
