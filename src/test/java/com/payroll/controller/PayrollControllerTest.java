@@ -29,15 +29,15 @@ import static org.mockito.Mockito.when;
 
     @Test
     void testCalculatePayrolls() {
-        // Given
+       
         Payroll payroll1 = new Payroll();
         Payroll payroll2 = new Payroll();
         List<Payroll> payrolls = Arrays.asList(payroll1, payroll2);
 
-        // When
+       
         when(payrollService.calculatePayrolls()).thenReturn(payrolls);
 
-        // Then
+        
         ResponseEntity<List<Payroll>> response = payrollController.calculatePayrolls();
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(payrolls, response.getBody());
@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 
     @Test
      void testGetPayrollDetails() {
-        // Given
+      
         Long employeeId = 1L;
         int year = 2023;
         int month = 6;
@@ -55,18 +55,19 @@ import static org.mockito.Mockito.when;
             7200.00, 3000.00, 1200.00, 81000.00, 11300.00
         );
 
-        // When
+        
         when(payrollService.getPayrollDetails(employeeId, year, month)).thenReturn(payrollDetailsDTO);
 
-        // Then
+       
         ResponseEntity<PayrollDetailsDTO> response = payrollController.getPayrollDetails(employeeId, year, month);
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(payrollDetailsDTO, response.getBody());
     }
 
+    
     @Test
      void testGetEmployeeDetails() {
-        // Given
+        
         Long employeeId = 1L;
         EmployeeDetailsDTO employeeDetailsDTO = new EmployeeDetailsDTO(
             employeeId, "Anu", "Software Engineer", new Date(), "ABCDE1234F", 
@@ -74,10 +75,10 @@ import static org.mockito.Mockito.when;
             "1234567890"
         );
 
-        // When
+        
         when(payrollService.getEmployeeDetails(employeeId)).thenReturn(employeeDetailsDTO);
 
-        // Then
+       
         ResponseEntity<EmployeeDetailsDTO> response = payrollController.getEmployeeDetails(employeeId);
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(employeeDetailsDTO, response.getBody());

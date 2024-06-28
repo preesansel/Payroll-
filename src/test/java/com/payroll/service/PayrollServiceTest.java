@@ -18,7 +18,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mock.Strictness;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -35,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+
  class PayrollServiceTest {
 
 	@Mock
@@ -49,12 +52,12 @@ import static org.mockito.Mockito.*;
     @Mock
     private RestTemplate restTemplate;
 
-    @Mock
+    @Mock(strictness=Strictness.LENIENT)
     private Random mockRandom;
     
   
     
-    @InjectMocks
+
     private PayrollService payrollService;
     
 
@@ -62,12 +65,14 @@ import static org.mockito.Mockito.*;
 
     @BeforeEach
  void setup() {
-       // when(mockRandom.nextInt(anyInt())).thenReturn(5);
+        when(mockRandom.nextInt(anyInt())).thenReturn(5);
         when(restTemplateBuilder.build()).thenReturn(restTemplate);
         payrollService = new PayrollService(employeeRepository, payrollRepository, restTemplateBuilder);
         PayrollService.setRandom(mockRandom);
     }
 
+   
+    
     @Test
    void shouldBeAbleToCalculatePayrolls() {
         List<EmployeeSalaryDTO> employeeSalaryDTOs = List.of(
@@ -78,6 +83,7 @@ import static org.mockito.Mockito.*;
                 new EmployeeSalaryDTO(2L, java.sql.Date.valueOf("2024-03-12"), 72000.0,
                         14400.0, 12000.0, 7200.0)
         );
+        
         Map<Long, TaxDTO> taxResponse = Map.of(
                 1L, new TaxDTO(15000.0, 500.0),
                 2L, new TaxDTO(15000.0, 500.0)
@@ -93,7 +99,7 @@ import static org.mockito.Mockito.*;
         );
 
 
-//        when(payrollRepository.saveAll(any(expectedPayrolls.getClass))).thenReturn(expectedPayrolls);
+
 
 
 
@@ -101,12 +107,13 @@ import static org.mockito.Mockito.*;
         System.out.println(payrolls.get(0).getBasicPay());
 
         assertNotNull(payrolls);
+        assertEquals(expectedPayrolls,payrolls);
     }
 
-    @BeforeEach
-     void setup1() {
-        payrollService = new PayrollService(employeeRepository, payrollRepository, restTemplateBuilder);
-    }
+//    @BeforeEach
+//     void setup1() {
+//        payrollService = new PayrollService(employeeRepository, payrollRepository, restTemplateBuilder);
+//    }
 
     @Test
      void testGetEmployeeDetails_Found() {
@@ -118,10 +125,10 @@ import static org.mockito.Mockito.*;
         Long employeeId = 1L;
         when(employeeRepository.findEmployeeDetailsById(employeeId)).thenReturn(employeeDetailsDTO);
 
-        // When
+        
         EmployeeDetailsDTO result = payrollService.getEmployeeDetails(employeeId);
 
-        // Then
+      
         assertNotNull(result);
         assertEquals(employeeDetailsDTO.getEmployeeId(), result.getEmployeeId());
         assertEquals(employeeDetailsDTO.getEmployeeName(), result.getEmployeeName());
@@ -140,11 +147,11 @@ import static org.mockito.Mockito.*;
 
     @Test
      void testGetEmployeeDetails_NotFound() {
-        // Given
+       
         Long employeeId = 2L;
         when(employeeRepository.findEmployeeDetailsById(employeeId)).thenReturn(null);
 
-        // Then
+       
         Exception exception = assertThrows(EmployeeNotFoundException.class, () -> {
             payrollService.getEmployeeDetails(employeeId);
         });
